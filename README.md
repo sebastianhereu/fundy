@@ -1,5 +1,5 @@
 # fundy
-library to build techincal indicator-based equties trading strategies. 
+library to build techincal indicator-based equities trading strategies. 
 
 
 <img src=https://img.shields.io/badge/license-MIT-brightgreen>
