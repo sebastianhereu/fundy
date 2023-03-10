@@ -1,0 +1,74 @@
+name: Build Status
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+    paths-ignore:
+      - CONTRIBUTING.md
+      - LICENSE
+      - README.md
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest]
+        python-version: [3.9]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: "pip"
+        cache-dependency-path: 'pyproject.toml'
+
+    # - name: Install talib
+    #   run: |
+    #     wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz 
+    #     tar -xzf ta-lib-0.4.0-src.tar.gz && cd ta-lib/
+    #     sudo ./configure
+    #     sudo make
+    #     sudo make install
+    #     cd ../
+    - name: Install talib
+      run: |
+        brew install ta-lib
+    - name: Install dependencies
+      run: |
+        make develop
+    - name: Build 
+      run: |
+        make build
+    - name: Lint
+      run: |
+        make lint
+    # - name: Checks
+    #   run: |
+    #     make checks
+    - name: Set Environment Variables
+      run:  |
+        echo "TEST_BASE_URL=https://paper-api.alpaca.markets" >> $GITHUB_ENV
+        echo "TEST_SECRET_KEY=hUlNa2fWHLuLiJHybRVWeeTf21F0gVrbkL3LnvVu" >> $GITHUB_ENV
+        echo "TEST_API_KEY_ID=PKD0PGA53RQM7SW70U7L" >> $GITHUB_ENV
+    - name: Test
+      run: |
+        make coverage
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
+        path: python_junit.xml
+      if: ${{ always() }}
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
