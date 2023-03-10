@@ -1,7 +1,8 @@
 # fundy
 library to build techincal indicator-based equities trading strategies. 
 
-
+[![Build Status](https://github.com/sebastianhereu/fundy/actions/workflows/build.yml/badge.svg)](https://github.com/sebastianhereu/fundy/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/sebastianhereu/fundy/branch/main/graph/badge.svg)](https://codecov.io/gh/sebastianhereu/fundy)
 <img src=https://img.shields.io/badge/license-MIT-brightgreen>
 <img src=https://img.shields.io/github/issues/sebastianhereu/fundy>
 
